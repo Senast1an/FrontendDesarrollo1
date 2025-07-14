@@ -2,20 +2,22 @@
 <form id="formPedido">
   <div class="row mb-3">
     <div class="col-md-4">
-      <label for="rucCliente" class="form-label">RUC Cliente</label>
-      <input type="text" class="form-control" id="rucCliente" required>
+      <label for="rucClienteSelect" class="form-label">Cliente</label>
+      <select id="rucClienteSelect" class="form-select" required>
+        <option value="">Seleccione un cliente</option>
+      </select>
     </div>
-    <div class="col-md-4">
-      <label for="fechaPedido" class="form-label">Fecha de Pedido</label>
-      <input type="date" class="form-control" id="fechaPedido" required>
-    </div>
+    <!-- <div class="col-md-4"> -->
+      <!-- <label for="fechaPedido" class="form-label">Fecha de Pedido</label>
+      <input type="date" class="form-control" id="fechaPedido" required> -->
+    <!-- </div> -->
     <div class="col-md-4">
       <label for="fechaEntrega" class="form-label">Fecha de Entrega</label>
       <input type="date" class="form-control" id="fechaEntrega" required>
     </div>
-    <div class="col-md-4 d-flex align-items-end">
+    <!-- <div class="col-md-4 d-flex align-items-end">
       <button type="button" class="btn btn-outline-primary" id="btnBuscarCliente">Buscar Cliente</button>
-    </div>
+    </div> -->
   </div>
 
   <div id="datosCliente" class="mb-4"></div>

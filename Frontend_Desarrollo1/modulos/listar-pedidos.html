@@ -1,2 +1,61 @@
 <h3>Listado de Pedidos</h3>
-<p>Aquí irá una tabla con todos los pedidos realizados.</p>
+<table class="table table-hover table-bordered" id="tablaPedidos">
+  <thead class="table-dark">
+    <tr>
+      <th scope="col">#</th>
+      <th scope="col">RUC Cliente</th>
+      <th scope="col">Cliente</th>
+      <th scope="col">Fecha de Pedido</th>
+      <th scope="col">Fecha de Entrega</th>
+      <th scope="col">Estado</th>
+      <th scope="col">Total ($)</th>
+      <th scope="col">Acciones</th>
+    </tr>
+  </thead>
+  <tbody>
+    <!-- Las filas de pedidos se llenarán dinámicamente -->
+  </tbody>
+</table>
+
+<!-- Modal Detalle Pedido -->
+<div class="modal fade" id="detallePedidoModal" tabindex="-1" aria-labelledby="detallePedidoLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="detallePedidoLabel">Detalle del Pedido</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+      </div>
+      <div class="modal-body">
+        <p><strong>RUC Cliente:</strong> <span id="detalleRUC"></span></p>
+        <p><strong>Cliente:</strong> <span id="detalleCliente"></span></p>
+        <p><strong>Fecha de Pedido:</strong> <span id="detalleFechaPedido"></span></p>
+        <p><strong>Fecha de Entrega:</strong> <span id="detalleFechaEntrega"></span></p>
+        <p><strong>Estado:</strong> <span id="detalleEstado"></span></p>
+
+        <hr>
+
+        <h5>Productos del Pedido</h5>
+        <table class="table table-bordered">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Producto</th>
+              <th>Color</th>
+              <th>Grosor</th>
+              <th>Precio unitario ($)</th>
+              <th>Cantidad (UN)</th>
+              <th>Subtotal ($)</th>
+            </tr>
+          </thead>
+          <tbody id="detalleProductosBody">
+            <!-- Se llenará con JS -->
+          </tbody>
+        </table>
+
+        <div class="text-end mt-3">
+          <strong>Total del Pedido: $<span id="detalleTotal"></span></strong>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

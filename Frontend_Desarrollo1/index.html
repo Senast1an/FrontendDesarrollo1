@@ -42,26 +42,42 @@
   <div class="main-content" id="contenedor-principal">
     <!-- Aquí se cargará dinámicamente el contenido -->
   </div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="/javascript/config.js"></script>
+<script>
+  function mostrarPagina(nombre) {
+    const contenedor = document.getElementById('contenedor-principal');
 
-  <script>
-    function mostrarPagina(nombre) {
-      fetch(`modulos/${nombre}.html`)
-        .then(res => res.text())
-        .then(html => {
-          document.getElementById('contenedor-principal').innerHTML = html;
-        });
-    }
+    fetch(`modulos/${nombre}.html`)
+      .then(res => {
+        if (!res.ok) throw new Error(`No se encontró ${nombre}.html`);
+        return res.text();
+      })
+      .then(html => {
+        contenedor.innerHTML = html;
 
-    // Carga inicial
-    window.addEventListener('DOMContentLoaded', () => mostrarPagina('productos'));
-  </script>
+        // Eliminar scripts previos cargados dinámicamente
+        document.querySelectorAll("script[data-modulo]").forEach(s => s.remove());
 
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-  <script src="javascript/config.js"></script>
-  <script src="javascript/productos.js"></script>
-  <script src="javascript/colores.js"></script>
-  <script src="javascript/pedidos.js"></script>
-  <script src="javascript/clientes.js"></script>
-  <script src="javascript/listarPedidos.js"></script>
+        // Crear el nuevo script dinámico
+        const script = document.createElement('script');
+        script.src = `javascript/${nombre}.js`;
+        script.type = 'text/javascript';
+        script.setAttribute('data-modulo', nombre);
+        script.onload = () => console.log(`${nombre}.js cargado`);
+        script.onerror = () => console.error(`No se pudo cargar javascript/${nombre}.js`);
+        document.body.appendChild(script);
+      })
+      .catch(err => {
+        contenedor.innerHTML = `<div class="alert alert-danger">Error al cargar página: ${err.message}</div>`;
+      });
+  }
+
+  // Cargar productos al iniciar
+  window.addEventListener('DOMContentLoaded', () => mostrarPagina('productos'));
+</script>
+
+
+
 </body>
 </html>

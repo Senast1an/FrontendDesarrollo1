@@ -1,14 +1,37 @@
-document.addEventListener("DOMContentLoaded", () => {
+(() => {
+  const tabla = document.getElementById("productosTable");
+  if (!tabla) return;
+
+  console.log("productos.js cargado");
+
   cargarProductos();
-  cargarColores();
   cargarProductosSelect();
 
-  document.getElementById("productoForm").addEventListener("submit", async (e) => {
+  // Buscador
+  const buscarInput = document.getElementById("buscarInput");
+  const btnLimpiarBusqueda = document.getElementById("btnLimpiarBusqueda");
+
+  buscarInput?.addEventListener("input", filtrarTabla);
+  btnLimpiarBusqueda?.addEventListener("click", () => {
+    buscarInput.value = "";
+    cargarProductos();
+  });
+
+  // Modal: cargar colores al abrir el modal de nuevo producto
+  const productoModal = document.getElementById("productoModal");
+  if (productoModal) {
+    productoModal.addEventListener("shown.bs.modal", cargarColores);
+  }
+
+  // Registro de producto
+  const productoForm = document.getElementById("productoForm");
+  productoForm?.addEventListener("submit", async (e) => {
     e.preventDefault();
-    const colorId = document.getElementById("colorSelect").value;
-    const grosor = parseFloat(document.getElementById("grosor").value);
-    const precio = parseFloat(document.getElementById("precio").value);
-    const stock = parseInt(document.getElementById("stock").value);
+
+    const colorId = document.getElementById("colorSelect")?.value;
+    const grosor = parseFloat(document.getElementById("grosor")?.value);
+    const precio = parseFloat(document.getElementById("precio")?.value);
+    const stock = parseInt(document.getElementById("stock")?.value);
 
     const producto = { color: { codigo: colorId }, grosor, precio, stock };
 
@@ -21,19 +44,16 @@ document.addEventListener("DOMContentLoaded", () => {
     if (resp.ok) {
       cargarProductos();
       cargarProductosSelect();
-      document.getElementById("productoForm").reset();
-      bootstrap.Modal.getInstance(document.getElementById("productoModal")).hide();
+      productoForm.reset();
+      bootstrap.Modal.getInstance(productoModal).hide();
     }
   });
 
-  document.getElementById("buscarInput").addEventListener("input", filtrarTabla);
-  document.getElementById("btnLimpiarBusqueda").addEventListener("click", () => {
-    document.getElementById("buscarInput").value = "";
-    cargarProductos();
-  });
-
-  document.getElementById("formEditarProducto").addEventListener("submit", function(e) {
+  // Edición de producto
+  const formEditar = document.getElementById("formEditarProducto");
+  formEditar?.addEventListener("submit", async (e) => {
     e.preventDefault();
+
     const producto = {
       color: { codigo: document.getElementById("editar-color").value },
       grosor: parseFloat(document.getElementById("editar-grosor").value),
@@ -41,21 +61,27 @@ document.addEventListener("DOMContentLoaded", () => {
       stock: parseInt(document.getElementById("editar-stock").value)
     };
 
-    fetch(API_BASE_URL + "/api/productos/" + currentEditId, {
+    const res = await fetch(API_BASE_URL + "/api/productos/" + currentEditId, {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(producto)
-    }).then(res => {
-      if (res.ok) {
-        alert("Producto actualizado");
-        bootstrap.Modal.getInstance(document.getElementById('editarProductoModal')).hide();
-        cargarProductos();
-      } else {
-        alert("Error al actualizar producto");
-      }
     });
+
+    if (res.ok) {
+      alert("Producto actualizado");
+      bootstrap.Modal.getInstance(document.getElementById('editarProductoModal')).hide();
+      cargarProductos();
+    } else {
+      alert("Error al actualizar producto");
+    }
+    
+    let currentEditId = null;
   });
-});
+})();
+
+// ========================
+// FUNCIONES AUXILIARES
+// ========================
 
 async function cargarProductos() {
   const resp = await fetch(API_BASE_URL + "/api/productos");
@@ -63,10 +89,11 @@ async function cargarProductos() {
 
   const tbody = document.querySelector("#productosTable tbody");
   tbody.innerHTML = "";
+
   data.forEach(p => {
     tbody.innerHTML += `
       <tr>
-        <th scope="row">${p.id}</td>
+        <th scope="row">${p.id}</th>
         <td>${p.color?.nombre || p.color?.codigo}</td>
         <td>${p.grosor}</td>
         <td>${p.precio}</td>
@@ -84,10 +111,16 @@ async function cargarProductos() {
 }
 
 async function cargarColores() {
+  console.log("Cargando colores...");
   const resp = await fetch(API_BASE_URL + "/api/colores");
   const data = await resp.json();
 
   const select = document.getElementById("colorSelect");
+  if (!select) {
+    console.warn("colorSelect no encontrado");
+    return;
+  }
+
   select.innerHTML = `<option value="">Selecciona un color</option>`;
   data.forEach(c => {
     select.innerHTML += `<option value="${c.codigo}">${c.nombre}</option>`;
@@ -99,6 +132,8 @@ async function cargarProductosSelect() {
   const data = await resp.json();
 
   const select = document.getElementById("productoSelect");
+  if (!select) return;
+
   select.innerHTML = `<option value="">Selecciona un producto</option>`;
   data.forEach(p => {
     select.innerHTML += `<option value="${p.id}">${p.color.nombre} - ${p.grosor}mm</option>`;
@@ -119,8 +154,6 @@ function toggleActivo(id, activo) {
     }
   });
 }
-
-let currentEditId = null;
 
 function editarProducto(id) {
   fetch(API_BASE_URL + "/api/productos/" + id)
@@ -168,7 +201,7 @@ async function filtrarTabla() {
     .forEach(p => {
       tbody.innerHTML += `
         <tr>
-          <th scope="row">${p.id}</td>
+          <th scope="row">${p.id}</th>
           <td>${p.color?.nombre || p.color?.codigo}</td>
           <td>${p.grosor}</td>
           <td>${p.precio}</td>
