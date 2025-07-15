@@ -105,6 +105,30 @@ async function cargarProductos() {
         </td>
       </tr>`;
   });
+document.getElementById("formEditarProducto").addEventListener("submit", function(e) {
+  e.preventDefault();
+  
+  const producto = {
+    color: { codigo: document.getElementById("editar-color").value },
+    grosor: parseFloat(document.getElementById("editar-grosor").value),
+    precio: parseFloat(document.getElementById("editar-precio").value),
+    stock: parseInt(document.getElementById("editar-stock").value)
+  };
+
+  fetch(`${API_BASE_URL}/api/productos/${currentEditId}`, {
+    method: "PUT",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(producto)
+  }).then(res => {
+    if (res.ok) {
+      alert("Producto actualizado");
+      bootstrap.Modal.getInstance(document.getElementById('editarProductoModal')).hide();
+      cargarProductos();
+    } else {
+      alert("Error al actualizar producto");
+    }
+  });
+});
 
   let totalStock = data.reduce((acc, p) => acc + (p.stock || 0), 0);
   document.getElementById("resumenStock").textContent = `Total en stock: ${totalStock}`;

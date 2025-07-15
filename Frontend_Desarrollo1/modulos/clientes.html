@@ -1,2 +1,67 @@
 <h3>Gestión de Clientes</h3>
 <p>Sección para listar, crear y editar clientes.</p>
+
+<div class="mb-3">
+  <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#clienteModal">+ Nuevo Cliente</button>
+</div>
+
+<table class="table table-bordered table-hover" id="clientesTable">
+  <thead class="table-dark">
+    <tr>
+      <th>#</th>
+      <th>RUC</th>
+      <th>Razón Social</th>
+      <th>Correo</th>
+      <th>Teléfono</th>
+      <th>Línea de Crédito ($)</th>
+      <th>Cuota Mensual ($)</th>
+    </tr>
+  </thead>
+  <tbody>
+
+  </tbody>
+</table>
+
+<div class="modal fade" id="clienteModal" tabindex="-1" aria-labelledby="clienteModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <form id="clienteForm">
+        <div class="modal-header">
+          <h5 class="modal-title" id="clienteModalLabel">Nuevo Cliente</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+        </div>
+        <div class="modal-body">
+          <input type="hidden" id="clienteRUCEditando">
+          <div class="mb-3">
+            <label for="rucCliente" class="form-label">RUC</label>
+            <input type="text" class="form-control" id="rucCliente" required>
+          </div>
+          <div class="mb-3">
+            <label for="razonSocial" class="form-label">Razón Social</label>
+            <input type="text" class="form-control" id="razonSocial" required>
+          </div>
+          <div class="mb-3">
+            <label for="correo" class="form-label">Correo</label>
+            <input type="email" class="form-control" id="correo" required>
+          </div>
+          <div class="mb-3">
+            <label for="telefono" class="form-label">Teléfono</label>
+            <input type="text" class="form-control" id="telefono" required>
+          </div>
+          <div class="mb-3">
+            <label for="lineaCredito" class="form-label">Línea de Crédito</label>
+            <input type="number" class="form-control" id="lineaCredito" required min="0">
+          </div>
+          <div class="mb-3">
+            <label for="cuotaMensual" class="form-label">Cuota Mensual</label>
+            <input type="number" class="form-control" id="cuotaMensual" required min="0">
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="submit" class="btn btn-primary">Guardar</button>
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
